@@ -1,0 +1,88 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Verifyotp</title>
+    <script src="~/Scripts/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript">
+
+        function verifyotp() {
+
+            var otpobj = new Object();
+            otpobj.otpagainst = $("#lblmobilenumber").html();
+            otpobj.otp = $("#txtotp").val();
+            otpobj.otpid = $("#lblotpid").html();
+
+            var messagedata = new Object();
+            messagedata.otps = [otpobj];
+            messagedata.purpose = "appregistration";
+            messagedata.devicetype = "Android";
+            messagedata.os = "19";
+            messagedata.appalreadyexists = $("#lblappalreadyexist").html();
+
+            var data1 = new Object();
+            data1.deviceid = $("#lbldeviceid").html();
+            //data1.appid = "B3454AD8-4646-43A0-9214-3892AEF3B11C";
+            data1.messagetype = "addpersonalcard";
+            data1.messagedata = messagedata;
+            data1.version = "1.0.7";
+            data1.token = "9876";
+
+            $.ajax({
+                url: 'http://localhost:52137/api/app',
+                type: 'POST',
+                dataType: 'json',
+                data: data1,
+                success: function (response) {
+                    if (response.messagedata.message = "OTP Verified Successfull") {
+                        var url = "/Home/SaveCard?mobilenumber=" + mobilenumber + "&deviceid=" + deviceid + "&appalreadyexist=" + appalreadyexist;
+                        window.location.href = url;
+                    }
+                    else {
+                        alert(JSON.stringify(response));
+                    }
+
+                },
+                error: function (err) {
+                    console.log('Error in Operation');
+                }
+            });
+        }
+
+
+    </script>
+
+</head>
+<body>
+    <div>
+        <label>OTPID:</label>
+        <label id="lblotpid">@Convert.ToString(Request.QueryString["otpid"])</label>
+    </div>
+    <div>
+        <label>deviceid:  </label>
+        <label id="lbldeviceid">@Convert.ToString(Request.QueryString["deviceid"])</label>
+    </div>
+    <div>
+        <label>appalreadyexist:  </label>
+        <label id="lblappalreadyexist">@Convert.ToString(Request.QueryString["appalreadyexist"])</label>
+    </div>
+    <div>
+        <label>mobilenumber:  </label>
+        <label id="lblmobilenumber">@Convert.ToString(Request.QueryString["mobilenumber"])</label>
+    </div>
+    <div>
+        <label>Enter OTP</label>
+        <input type="text" id="txtotp" value="" maxlength="4" />
+    </div>
+    <input type="button" id="btn" value="verify OTP" onclick="verifyotp();" />
+
+</body>
+
+
+</html>

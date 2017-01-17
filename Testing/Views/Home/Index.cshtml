@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<h2>Home</h2>
+
+<div>
+    <label>Device ID</label>
+    <input type="text" id="txtdeviceid" value="" maxlength="16" />
+</div>
+<div>
+    <label>Mobile No</label>
+    <input type="text" id="txtmobilenumber" value="" maxlength="13" />
+</div>
+<input type="button" id="btn" value="callapi" onclick="callapi();" />
+<span id="spndata"></span>
+
+
+<script src="~/Scripts/jquery-2.2.3.min.js"></script>
+<script type="text/javascript">
+    
+
+
+    function callapi() {
+        var messagedata = new Object();
+        messagedata.otpagainst = $("#txtmobilenumber").val();
+        messagedata.type = "number";
+        messagedata.version = "1.0";
+
+
+        var data1 = new Object();
+        data1.deviceid = $("#txtdeviceid").val();
+        //data1.appid = "B3454AD8-4646-43A0-9214-3892AEF3B11C";
+        data1.messagetype = "appregistration";
+        data1.messagedata = messagedata;
+        data1.version = "1.0.7";
+        //data1.token = "9876";
+        $.ajax({
+            url: 'http://localhost:52137/api/app',
+            type: 'POST',
+            dataType: 'json',
+            data: data1,
+            success: function (response) {
+                if (response.messagedata.otpflag == true) {
+                    var res = response;
+                    console.log("isAppAlreadyExist :" + response.messagedata.appalreadyexist);
+                    console.log("otpid :" + response.messagedata.otpid);
+                    console.log("message :" + response.messagedata.message);
+                    console.log("errorcode :" + response.errorcode);
+
+                    var otpid = response.messagedata.otpid;
+                    var mobilenumber = messagedata.otpagainst;
+                    var deviceid = data1.deviceid;
+                    var appalreadyexist = response.messagedata.appalreadyexist;
+                    var url = "/Home/Verifyotp?otpid=" + otpid + "&mobilenumber=" + mobilenumber + "&deviceid=" + deviceid + "&appalreadyexist=" + appalreadyexist;
+                    window.location.href = url;
+
+                }
+                else {
+                    console.log("failed to send otp");
+                }
+            },
+            error: function (err) {
+                alert(err);
+                console.log('Error in Operation');
+            }
+        });
+    }
+
+</script>

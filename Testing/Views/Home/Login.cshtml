@@ -1,0 +1,69 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <script src="~/Scripts/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function myfunction() {
+            $("#btnLogin").click(function myfunction() {
+                verifyotp();
+            });
+        });
+        function verifyotp() {
+
+            var otpobj = new Object();
+            otpobj.otpagainst = $("#lblmobilenumber").html();
+            otpobj.otp = $("#txtotp").val();
+            otpobj.otpid = $("#lblotpid").html();
+
+            $.ajax({
+                url: 'http://localhost:52137/api/app',
+                type: 'POST',
+                dataType: 'json',
+                data: data1,
+                success: function (response) {
+                    if (response.messagedata.message = "OTP Verified Successfull") {
+                        var url = "/Home/login?mobilenumber=" + mobilenumber + "&deviceid=" + deviceid + "&appalreadyexist=" + appalreadyexist;
+                        window.location.href = url;
+                    }
+                    else {
+                        alert(JSON.stringify(response));
+                    }
+
+                },
+                error: function (err) {
+                    console.log('Error in Operation');
+                }
+            });
+        }
+
+
+    </script>
+</head>
+<body>
+    <div>
+
+        <div>
+            <label>App ID</label>
+            <input type="text" id="txtappid" value="" maxlength="36" />
+        </div>
+        <div>
+            <label>Device ID</label>
+            <input type="text" id="txtdeviceid" value="" maxlength="36" />
+        </div>
+        <div>
+            <label>Token</label>
+            <input type="text" id="txttoken" value="" maxlength="4" />
+        </div>
+        <input type="button" id="btnLogin" value="Login" />
+    </div>
+</body>
+</html>

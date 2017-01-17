@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "SaveCard";
+}
+
+<h2>SaveCard</h2>
+<div>
+    <label>deviceid:  </label>
+    <label id="lbldeviceid">@Convert.ToString(Request.QueryString["deviceid"])</label>
+</div>
+<div>
+    <label>appalreadyexist:  </label>
+    <label id="lblappalreadyexist">@Convert.ToString(Request.QueryString["appalreadyexist"])</label>
+</div>
+<div>
+    <label>mobilenumber:  </label>
+    <label id="lblmobilenumber">@Convert.ToString(Request.QueryString["mobilenumber"])</label>
+</div>
+
+
